@@ -43,10 +43,16 @@ app.get('/campgrounds/new', (req, res) => {
 
 app.post('/campgrounds', catchAsync(async (req, res,next) => {
     // res.send(req.body);
-    if(!req.body.campground) throw new ExpressError('Invalid Campground Data',400)
-    const campground = new Campground(req.body.campground);
-    await campground.save();
-    res.redirect(`/campgrounds/${campground._id}`)
+    // if(!req.body.campground) throw new ExpressError('Invalid Campground Data',400)
+
+
+    try{
+        const campground = new Campground(req.body.campground);
+        await campground.save();
+        res.redirect(`/campgrounds/${campground._id}`)
+    }catch(e){
+        next(e)
+    }
 
 }))
 app.get('/campgrounds/:id', catchAsync(async (req, res) => {
@@ -77,10 +83,13 @@ app.all('*',(req,res,next)=>{
     // res.send("404!!!!")
     next(new ExpressError('Page Not Found',404))
 })
+
 app.use((err,req,res,next)=>{
-    const{statusCode = 500,message ='Something went wrong'} = err;
-    res.status(statusCode).send(message);
+    // const{statusCode = 500,message ='Something went wrong'} = err;
+    // // res.status(statusCode).render('error');
+    // res.status(statusCode).send(message);
     // res.send('Oh boy,something went wrong');
+    res.send('Oh boy')
 })
 
 app.listen(3000, () => {
