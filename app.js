@@ -30,6 +30,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(methodOverride('_method'));
 app.use('/campgrounds',campgrounds);
 app.use('/campground/:id/reviews',reviews);
+app.use(express.static(path.join(__dirname,'public')))
 
 const validateCampground = (req,res,next) => {
     const {error} = campgroundSchema.validate(req.body);
