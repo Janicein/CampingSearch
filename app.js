@@ -1,4 +1,5 @@
 const express = require('express');
+const session = require('express-session')
 const path = require('path');
 const Campground = require('./models/campground');
 const mongoose = require('mongoose');
@@ -30,7 +31,19 @@ app.use(express.urlencoded({ extended: true }))
 app.use(methodOverride('_method'));
 app.use('/campgrounds',campgrounds);
 app.use('/campground/:id/reviews',reviews);
-app.use(express.static(path.join(__dirname,'public')))
+app.use(express.static(path.join(__dirname,'public')));
+const sessionConfig = {
+    secret:'this should be better secret',
+    resave:false,
+    saveUninitialized:true,
+    cookie:{
+        httpOnly:true,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge:1000 * 60 * 60 * 24 * 7
+    }
+
+}
+app.use(session(sessionConfig))
 
 const validateCampground = (req,res,next) => {
     const {error} = campgroundSchema.validate(req.body);
