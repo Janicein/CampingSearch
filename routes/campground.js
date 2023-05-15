@@ -4,7 +4,8 @@ const Campground = require('../models/campground');
 const catchAsync = require('../utils/catchAsync');
 const campgrounds = require('../controller/campgrounds')
 const multer = require('multer');
-const upload = multer({dest:'upload'});
+const {storage} = require('../cloudinary')
+const upload = multer({storage});
 
 const {isLoggedIn,isAuthor,validateCampground} = require('../middleware');
 
