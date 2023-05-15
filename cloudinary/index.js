@@ -10,9 +10,11 @@ cloudinary.config({
 
 const storage = new CloudinaryStorage({
     cloudinary,
-    folder:'CampingSearch',
-    allowedFormats:['jpeg','png','jpg']
+    params:{
+        folder:'CampingSearch',
+        allowedFormats:['jpeg','png','jpg']
 
+    }
 });
 
 module.exports ={
