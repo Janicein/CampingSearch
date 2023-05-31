@@ -1,24 +1,9 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Show</title>
-</head>
-
-<body> -->
 <% layout('layouts/boilerplate')%>
 <link rel="stylesheet" href="/stylesheets/stars.css">
 
-
-
-
 <div class="row">
     <div class="col-6">
-        <div id='map' style='width: 400px; height: 300px;'></div>
-
         <div id="campgroundCarousel" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
                 <% campground.images.forEach((img,i) => { %>
@@ -69,6 +54,7 @@
 
     </div>
     <div class="col-6">
+        <div id='map' style='width: 100%; height: 300px;'></div>
         <% if(currentUser) {%>
         <h2>Leave a Review</h2>
         <form action="/campgrounds/<%=campground.id%>/reviews" method ="POST" class="mb-3 validated-form" novalidate>
