@@ -18,8 +18,17 @@ const User = require('./models/user');
 const userRouters = require('./routes/users');
 const campgrounds = require('./routes/campground');
 const reviews = require('./routes/reviews');
+const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
+// const DB_URL= process.env.DB_URL;
+const DB_URL = 'mongodb://localhost:27017/yelp-camp';
+const MongoDBStore = require("connect-mongo")(session);
+// const session = require('express-session');
+// const MongoStore = require('connect-mongo');
 
-mongoose.connect('mongodb://localhost:27017/yelp-camp');
+mongoose.set('strictQuery', true);
+mongoose.connect(DB_URL);
+
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
@@ -36,8 +45,23 @@ app.set('views', path.join(__dirname, 'views'))
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')))
+app.use(mongoSanitize({
+    replaceWith: '_'
+}))
 
+
+const store = new MongoDBStore({
+    url:DB_URL,
+    touchAfter: 24 * 60 * 60,
+    secret: 'thisshouldbeabettersecret!'
+
+});
+
+store.on("error",function(e){
+    console.log("SESSION STORE ERROR",e)
+})
 const sessionConfig = {
+    store,
     secret: 'thisshouldbeabettersecret!',
     resave: false,
     saveUninitialized: true,
@@ -83,6 +107,8 @@ app.use((err, req, res, next) => {
     res.status(statusCode).render('error', { err })
 })
 
+
+const port = process.env.PORT || 3000;
 app.listen(3000, () => {
-    console.log('Serving on port 3000')
+    console.log(`Serving on port ${port}`)
 })
